@@ -52,7 +52,7 @@ public class MySqlBookInfoDao extends BaseDao implements BookInfoDao {
                 statement.setInt(1, id);
                 try (ResultSet resultSet = statement.executeQuery()) {
                     while (resultSet.next()) {
-                        bookInfo = itemBookInfo(bookInfo, resultSet);
+                        bookInfo = itemBookInfo(resultSet);
                     }
                 }
             }
@@ -100,7 +100,7 @@ public class MySqlBookInfoDao extends BaseDao implements BookInfoDao {
                 statement.setInt(1, id);
                 try (ResultSet resultSet = statement.executeQuery()) {
                     while (resultSet.next()) {
-                        bookInfo = itemBookInfo(bookInfo, resultSet);
+                        bookInfo = itemBookInfo(resultSet);
                     }
                 }
             }
@@ -119,7 +119,7 @@ public class MySqlBookInfoDao extends BaseDao implements BookInfoDao {
                 statement.setInt(1, transaction.getId());
                 try (ResultSet resultSet = statement.executeQuery()) {
                     while (resultSet.next()) {
-                        bookInfo = itemBookInfo(bookInfo, resultSet);
+                        bookInfo = itemBookInfo(resultSet);
                     }
                 }
             }
@@ -130,8 +130,8 @@ public class MySqlBookInfoDao extends BaseDao implements BookInfoDao {
         return bookInfo;
     }
 
-    private BookInfo itemBookInfo(BookInfo bookInfo, ResultSet resultSet) throws SQLException {
-        bookInfo = new BookInfo();
+    private BookInfo itemBookInfo(ResultSet resultSet) throws SQLException {
+        BookInfo bookInfo = new BookInfo();
         bookInfo.setId(resultSet.getInt(1));
         bookInfo.setAmount(resultSet.getInt(2));
         bookInfo.setPrice(resultSet.getInt(3));

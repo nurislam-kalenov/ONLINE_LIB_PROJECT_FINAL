@@ -58,7 +58,7 @@ public class MySqlCustomerDao extends BaseDao implements CustomerDao {
                 statement.setInt(1, id);
                 try (ResultSet resultSet = statement.executeQuery()) {
                     while (resultSet.next()) {
-                        customer = itemCustomer(customer, resultSet);
+                        customer = itemCustomer(resultSet);
                     }
                 }
             }
@@ -123,7 +123,7 @@ public class MySqlCustomerDao extends BaseDao implements CustomerDao {
                 statement.setString(1, login);
                 try (ResultSet resultSet = statement.executeQuery()) {
                     while (resultSet.next()) {
-                        customer = itemCustomer(customer, resultSet);
+                        customer = itemCustomer(resultSet);
                     }
                 }
             }
@@ -143,7 +143,7 @@ public class MySqlCustomerDao extends BaseDao implements CustomerDao {
                 statement.setString(2, password);
                 try (ResultSet resultSet = statement.executeQuery()) {
                     while (resultSet.next()) {
-                        customer = itemCustomer(customer, resultSet);
+                        customer = itemCustomer(resultSet);
                     }
                 }
             }
@@ -184,7 +184,7 @@ public class MySqlCustomerDao extends BaseDao implements CustomerDao {
                 statement.setInt(2, count);
                 try (ResultSet resultSet = statement.executeQuery()) {
                     while (resultSet.next()) {
-                        customer = itemCustomer(customer, resultSet);
+                        customer = itemCustomer(resultSet);
                         list.add(customer);
                     }
                 }
@@ -205,8 +205,8 @@ public class MySqlCustomerDao extends BaseDao implements CustomerDao {
         return statement;
     }
 
-    private Customer itemCustomer(Customer customer, ResultSet resultSet) throws SQLException {
-        customer = new Customer();
+    private Customer itemCustomer(ResultSet resultSet) throws SQLException {
+        Customer customer = new Customer();
         customer.setId(resultSet.getInt(1));
         customer.setRegisterDate(resultSet.getDate(2));
         customer.setPassword(resultSet.getString(3));

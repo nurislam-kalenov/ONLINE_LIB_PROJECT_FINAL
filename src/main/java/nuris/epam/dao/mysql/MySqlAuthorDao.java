@@ -50,7 +50,7 @@ public class MySqlAuthorDao extends BaseDao implements AuthorDao {
                 statement.setInt(1, id);
                 try (ResultSet resultSet = statement.executeQuery()) {
                     while (resultSet.next()) {
-                        author = itemAuthor(author, resultSet);
+                        author = itemAuthor(resultSet);
                     }
                 }
             }
@@ -98,7 +98,7 @@ public class MySqlAuthorDao extends BaseDao implements AuthorDao {
                 statement.setInt(1, book.getId());
                 try (ResultSet resultSet = statement.executeQuery()) {
                     while (resultSet.next()) {
-                        author = itemAuthor(author, resultSet);
+                        author = itemAuthor(resultSet);
                     }
                 }
             }
@@ -116,8 +116,8 @@ public class MySqlAuthorDao extends BaseDao implements AuthorDao {
         return statement;
     }
 
-    private Author itemAuthor(Author author, ResultSet resultSet) throws SQLException {
-        author = new Author();
+    private Author itemAuthor(ResultSet resultSet) throws SQLException {
+        Author author = new Author();
         author.setId(resultSet.getInt(1));
         author.setFirstName(resultSet.getString(2));
         author.setLastName(resultSet.getString(3));

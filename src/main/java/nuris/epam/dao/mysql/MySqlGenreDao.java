@@ -37,7 +37,7 @@ public class MySqlGenreDao extends BaseDao implements GenreDao {
                 statement.setInt(1, id);
                 try (ResultSet resultSet = statement.executeQuery()) {
                     while (resultSet.next()) {
-                        genre = itemGenre(genre, resultSet);
+                        genre = itemGenre(resultSet);
                     }
                 }
             }
@@ -67,7 +67,7 @@ public class MySqlGenreDao extends BaseDao implements GenreDao {
             try (PreparedStatement statement = getConnection().prepareStatement(SELECT_ALL)) {
                 try (ResultSet resultSet = statement.executeQuery()) {
                     while (resultSet.next()) {
-                        genre = itemGenre(genre, resultSet);
+                        genre = itemGenre(resultSet);
                         list.add(genre);
                     }
                 }
@@ -88,7 +88,7 @@ public class MySqlGenreDao extends BaseDao implements GenreDao {
                 statement.setInt(1, book.getId());
                 try (ResultSet resultSet = statement.executeQuery()) {
                     while (resultSet.next()) {
-                        genre = itemGenre(genre, resultSet);
+                        genre = itemGenre(resultSet);
                     }
                 }
             }
@@ -98,8 +98,8 @@ public class MySqlGenreDao extends BaseDao implements GenreDao {
         return genre;
     }
 
-    private Genre itemGenre(Genre genre, ResultSet resultSet) throws SQLException {
-        genre = new Genre();
+    private Genre itemGenre(ResultSet resultSet) throws SQLException {
+        Genre genre = new Genre();
         genre.setId(resultSet.getInt(1));
         genre.setName(resultSet.getString(2));
         return genre;

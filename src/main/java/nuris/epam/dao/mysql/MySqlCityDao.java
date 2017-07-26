@@ -51,7 +51,7 @@ public class MySqlCityDao extends BaseDao implements CityDao {
             try (PreparedStatement statement = getConnection().prepareStatement(SELECT_ALL)) {
                 try (ResultSet resultSet = statement.executeQuery()) {
                     while (resultSet.next()) {
-                        city = itemCity(city, resultSet);
+                        city = itemCity(resultSet);
                         list.add(city);
                     }
                 }
@@ -71,7 +71,7 @@ public class MySqlCityDao extends BaseDao implements CityDao {
                 statement.setInt(1, person.getId());
                 try (ResultSet resultSet = statement.executeQuery()) {
                     while (resultSet.next()) {
-                        city = itemCity(city, resultSet);
+                        city = itemCity(resultSet);
                     }
                 }
             }
@@ -82,8 +82,8 @@ public class MySqlCityDao extends BaseDao implements CityDao {
         return city;
     }
 
-    private City itemCity(City city, ResultSet resultSet) throws SQLException {
-        city = new City();
+    private City itemCity(ResultSet resultSet) throws SQLException {
+        City city = new City();
         city.setId(resultSet.getInt(1));
         city.setName(resultSet.getString(2));
         return city;

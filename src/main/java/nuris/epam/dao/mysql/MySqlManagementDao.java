@@ -55,7 +55,7 @@ public class MySqlManagementDao extends BaseDao implements ManagementDao {
                 statement.setInt(1, id);
                 try (ResultSet resultSet = statement.executeQuery()) {
                     while (resultSet.next()) {
-                        management = itemManagement(management, resultSet);
+                        management = itemManagement(resultSet);
                     }
                 }
             }
@@ -95,7 +95,7 @@ public class MySqlManagementDao extends BaseDao implements ManagementDao {
                 statement.setInt(2, count);
                 try (ResultSet resultSet = statement.executeQuery()) {
                     while (resultSet.next()) {
-                        management = itemManagement(management, resultSet);
+                        management = itemManagement(resultSet);
                         list.add(management);
                     }
                 }
@@ -126,8 +126,8 @@ public class MySqlManagementDao extends BaseDao implements ManagementDao {
         return count;
     }
 
-    private Management itemManagement(Management management, ResultSet resultSet) throws SQLException {
-        management = new Management();
+    private Management itemManagement(ResultSet resultSet) throws SQLException {
+        Management management = new Management();
         management.setId(resultSet.getInt(1));
         management.setReturnDate(resultSet.getTimestamp(2));
         return management;

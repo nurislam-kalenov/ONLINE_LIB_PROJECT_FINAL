@@ -50,7 +50,7 @@ public class MySqlPersonDao extends BaseDao implements PersonDao {
                 statement.setInt(1, id);
                 try (ResultSet resultSet = statement.executeQuery()) {
                     while (resultSet.next()) {
-                        person = itemPerson(person, resultSet);
+                        person = itemPerson(resultSet);
                     }
                 }
             }
@@ -98,7 +98,7 @@ public class MySqlPersonDao extends BaseDao implements PersonDao {
                 statement.setInt(1, customer.getId());
                 try (ResultSet resultSet = statement.executeQuery()) {
                     while (resultSet.next()) {
-                        person = itemPerson(person, resultSet);
+                        person = itemPerson(resultSet);
 
                     }
                 }
@@ -121,8 +121,8 @@ public class MySqlPersonDao extends BaseDao implements PersonDao {
         return statement;
     }
 
-    private Person itemPerson(Person person, ResultSet resultSet) throws SQLException {
-        person = new Person();
+    private Person itemPerson(ResultSet resultSet) throws SQLException {
+        Person person = new Person();
         person.setId(resultSet.getInt(1));
         person.setFirstName(resultSet.getString(2));
         person.setLastName(resultSet.getString(3));

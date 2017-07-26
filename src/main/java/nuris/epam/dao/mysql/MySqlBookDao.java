@@ -58,7 +58,7 @@ public class MySqlBookDao extends BaseDao implements BookDao {
                 statement.setInt(1, id);
                 try (ResultSet resultSet = statement.executeQuery()) {
                     while (resultSet.next()) {
-                        book = itemBook(book, resultSet);
+                        book = itemBook(resultSet);
                     }
                 }
             }
@@ -128,7 +128,7 @@ public class MySqlBookDao extends BaseDao implements BookDao {
                 statement.setInt(3, count);
                 try (ResultSet resultSet = statement.executeQuery()) {
                     while (resultSet.next()) {
-                        book = itemBook(book, resultSet);
+                        book = itemBook(resultSet);
                         list.add(book);
                     }
                 }
@@ -149,7 +149,7 @@ public class MySqlBookDao extends BaseDao implements BookDao {
                 statement.setString(1, name);
                 try (ResultSet resultSet = statement.executeQuery()) {
                     while (resultSet.next()) {
-                        book = itemBook(book, resultSet);
+                        book = itemBook(resultSet);
                         list.add(book);
                     }
                 }
@@ -169,7 +169,7 @@ public class MySqlBookDao extends BaseDao implements BookDao {
                 statement.setInt(1, bookInfo.getId());
                 try (ResultSet resultSet = statement.executeQuery()) {
                     while (resultSet.next()) {
-                        book = itemBook(book, resultSet);
+                        book = itemBook(resultSet);
                     }
                 }
             }
@@ -188,7 +188,7 @@ public class MySqlBookDao extends BaseDao implements BookDao {
                 statement.setString(1, isbn);
                 try (ResultSet resultSet = statement.executeQuery()) {
                     while (resultSet.next()) {
-                        book = itemBook(book, resultSet);
+                        book = itemBook(resultSet);
                     }
                 }
             }
@@ -199,8 +199,8 @@ public class MySqlBookDao extends BaseDao implements BookDao {
         return book;
     }
 
-    private Book itemBook(Book book, ResultSet resultSet) throws SQLException {
-        book = new Book();
+    private Book itemBook(ResultSet resultSet) throws SQLException {
+        Book book = new Book();
         book.setId(resultSet.getInt(1));
         book.setName(resultSet.getString(2));
         book.setDate(resultSet.getDate(3));

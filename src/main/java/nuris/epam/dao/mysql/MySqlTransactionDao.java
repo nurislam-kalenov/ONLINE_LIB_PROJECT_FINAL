@@ -61,7 +61,7 @@ public class MySqlTransactionDao extends BaseDao implements TransactionDao {
                 statement.setInt(1, id);
                 try (ResultSet resultSet = statement.executeQuery()) {
                     while (resultSet.next()) {
-                        transaction = itemTransaction(transaction, resultSet);
+                        transaction = itemTransaction(resultSet);
                     }
                 }
             }
@@ -110,7 +110,7 @@ public class MySqlTransactionDao extends BaseDao implements TransactionDao {
                 statement.setInt(1, transaction.getCustomer().getId());
                 try (ResultSet resultSet = statement.executeQuery()) {
                     while (resultSet.next()) {
-                        transaction = itemTransaction(transaction, resultSet);
+                        transaction = itemTransaction(resultSet);
                         list.add(transaction);
                     }
                 }
@@ -132,7 +132,7 @@ public class MySqlTransactionDao extends BaseDao implements TransactionDao {
                 statement.setInt(3, count);
                 try (ResultSet resultSet = statement.executeQuery()) {
                     while (resultSet.next()) {
-                        transaction = itemTransaction(transaction, resultSet);
+                        transaction = itemTransaction(resultSet);
                         list.add(transaction);
                     }
                 }
@@ -152,7 +152,7 @@ public class MySqlTransactionDao extends BaseDao implements TransactionDao {
                 statement.setInt(1, management.getId());
                 try (ResultSet resultSet = statement.executeQuery()) {
                     while (resultSet.next()) {
-                        transaction = itemTransaction(transaction, resultSet);
+                        transaction = itemTransaction(resultSet);
                     }
                 }
             }
@@ -182,8 +182,8 @@ public class MySqlTransactionDao extends BaseDao implements TransactionDao {
         return count;
     }
 
-    private Transaction itemTransaction(Transaction transaction, ResultSet resultSet) throws SQLException {
-        transaction = new Transaction();
+    private Transaction itemTransaction(ResultSet resultSet) throws SQLException {
+        Transaction transaction = new Transaction();
         transaction.setId(resultSet.getInt(1));
         transaction.setStartDate(resultSet.getDate(2));
         transaction.setEndDate(resultSet.getTimestamp(3));
