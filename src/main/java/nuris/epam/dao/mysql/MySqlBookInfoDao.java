@@ -38,7 +38,7 @@ public class MySqlBookInfoDao extends BaseDao implements BookInfoDao {
             }
             log.debug("Create the bookInfo entity where id = {}", item.getId());
         } catch (SQLException e) {
-            log.warn("Can't insert where value equals : {}", item,e);
+            log.warn("Can't insert where value equals : {}", item, e);
             throw new DaoException("can't insert " + item, e);
         }
         return item;
@@ -46,21 +46,7 @@ public class MySqlBookInfoDao extends BaseDao implements BookInfoDao {
 
     @Override
     public BookInfo findById(int id) throws DaoException {
-        BookInfo bookInfo = null;
-        try {
-            try (PreparedStatement statement = getConnection().prepareStatement(FIND_BY_ID)) {
-                statement.setInt(1, id);
-                try (ResultSet resultSet = statement.executeQuery()) {
-                    while (resultSet.next()) {
-                        bookInfo = itemBookInfo(resultSet);
-                    }
-                }
-            }
-        } catch (SQLException e) {
-            log.warn("Can't find the bookInfo entity where id equals : {}", id,e);
-            throw new DaoException("can't find by id ", e);
-        }
-        return bookInfo;
+        return findBookInfoByValue(FIND_BY_ID, id);
     }
 
     @Override
@@ -73,7 +59,7 @@ public class MySqlBookInfoDao extends BaseDao implements BookInfoDao {
             }
             log.debug("Update the bookInfo entity where id = {} : ", item.getId());
         } catch (SQLException e) {
-            log.warn("Can't update the bookInfo entity where id equals : {}", item.getId(),e);
+            log.warn("Can't update the bookInfo entity where id equals : {}", item.getId(), e);
             throw new DaoException("can't update bookInfo" + item, e);
         }
     }
@@ -87,45 +73,30 @@ public class MySqlBookInfoDao extends BaseDao implements BookInfoDao {
             }
             log.debug("Delete the bookInfo entity where id = {} : ", item.getId());
         } catch (SQLException e) {
-            log.warn("Can't delete the bookInfo entity where id equals : {}", item.getId(),e);
+            log.warn("Can't delete the bookInfo entity where id equals : {}", item.getId(), e);
             throw new DaoException("can't delete bookInfo" + item, e);
         }
     }
 
     @Override
     public BookInfo findByBook(int id) throws DaoException {
-        BookInfo bookInfo = null;
-        try {
-            try (PreparedStatement statement = getConnection().prepareStatement(FIND_BY_BOOK)) {
-                statement.setInt(1, id);
-                try (ResultSet resultSet = statement.executeQuery()) {
-                    while (resultSet.next()) {
-                        bookInfo = itemBookInfo(resultSet);
-                    }
-                }
-            }
-        } catch (SQLException e) {
-            log.warn("Can't find the bookInfo entity by book where book id equals : {}", id,e);
-            throw new DaoException("can't find by book ", e);
-        }
-        return bookInfo;
+        return findBookInfoByValue(FIND_BY_BOOK, id);
     }
+
 
     @Override
     public BookInfo findByTransaction(Transaction transaction) throws DaoException {
         BookInfo bookInfo = null;
-        try {
-            try (PreparedStatement statement = getConnection().prepareStatement(FIND_BY_TRANSACTION)) {
-                statement.setInt(1, transaction.getId());
-                try (ResultSet resultSet = statement.executeQuery()) {
-                    while (resultSet.next()) {
-                        bookInfo = itemBookInfo(resultSet);
-                    }
+        try (PreparedStatement statement = getConnection().prepareStatement(FIND_BY_TRANSACTION)) {
+            statement.setInt(1, transaction.getId());
+            try (ResultSet resultSet = statement.executeQuery()) {
+                while (resultSet.next()) {
+                    bookInfo = itemBookInfo(resultSet);
                 }
             }
         } catch (SQLException e) {
-            log.warn("Can't find the bookInfo entity by transaction where transaction id equals : {}", transaction.getId(),e);
-            throw new DaoException("can't find by transaction " , e);
+            log.warn("Can't find the bookInfo entity by transaction where transaction id equals : {}", transaction.getId(), e);
+            throw new DaoException("can't find by transaction ", e);
         }
         return bookInfo;
     }
@@ -144,4 +115,21 @@ public class MySqlBookInfoDao extends BaseDao implements BookInfoDao {
         statement.setInt(3, item.getBook().getId());
         return statement;
     }
+
+    private BookInfo findBookInfoByValue(String sqlQuery, int id) throws DaoException {
+        BookInfo bookInfo = null;
+        try (PreparedStatement statement = getConnection().prepareStatement(sqlQuery)) {
+            statement.setInt(1, id);
+            try (ResultSet resultSet = statement.executeQuery()) {
+                while (resultSet.next()) {
+                    bookInfo = itemBookInfo(resultSet);
+                }
+            }
+        } catch (SQLException e) {
+            log.warn("Can't find the bookInfo entity by book where book id equals : {}", id, e);
+            throw new DaoException("can't find by book ", e);
+        }
+        return bookInfo;
+    }
+
 }

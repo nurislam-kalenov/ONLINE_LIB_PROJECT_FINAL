@@ -32,17 +32,15 @@ public class MySqlGenreDao extends BaseDao implements GenreDao {
     @Override
     public Genre findById(int id) throws DaoException {
         Genre genre = null;
-        try {
-            try (PreparedStatement statement = getConnection().prepareStatement(FIND_BY_ID)) {
-                statement.setInt(1, id);
-                try (ResultSet resultSet = statement.executeQuery()) {
-                    while (resultSet.next()) {
-                        genre = itemGenre(resultSet);
-                    }
+        try (PreparedStatement statement = getConnection().prepareStatement(FIND_BY_ID)) {
+            statement.setInt(1, id);
+            try (ResultSet resultSet = statement.executeQuery()) {
+                while (resultSet.next()) {
+                    genre = itemGenre(resultSet);
                 }
             }
         } catch (SQLException e) {
-            log.warn("Can't find the genre entity where id equals : {} ", id ,e);
+            log.warn("Can't find the genre entity where id equals : {} ", id, e);
             throw new DaoException("can't find by id ", e);
         }
         return genre;
@@ -63,17 +61,15 @@ public class MySqlGenreDao extends BaseDao implements GenreDao {
     public List<Genre> getAllGenre() throws DaoException {
         List<Genre> list = new ArrayList<>();
         Genre genre = null;
-        try {
-            try (PreparedStatement statement = getConnection().prepareStatement(SELECT_ALL)) {
-                try (ResultSet resultSet = statement.executeQuery()) {
-                    while (resultSet.next()) {
-                        genre = itemGenre(resultSet);
-                        list.add(genre);
-                    }
+        try (PreparedStatement statement = getConnection().prepareStatement(SELECT_ALL)) {
+            try (ResultSet resultSet = statement.executeQuery()) {
+                while (resultSet.next()) {
+                    genre = itemGenre(resultSet);
+                    list.add(genre);
                 }
             }
         } catch (SQLException e) {
-            log.warn("Can't get all genre list ",e);
+            log.warn("Can't get all genre list ", e);
             throw new DaoException("can't get all list ", e);
         }
         return list;
@@ -83,13 +79,11 @@ public class MySqlGenreDao extends BaseDao implements GenreDao {
     @Override
     public Genre findByBook(Book book) throws DaoException {
         Genre genre = null;
-        try {
-            try (PreparedStatement statement = getConnection().prepareStatement(FIND_BY_BOOK)) {
-                statement.setInt(1, book.getId());
-                try (ResultSet resultSet = statement.executeQuery()) {
-                    while (resultSet.next()) {
-                        genre = itemGenre(resultSet);
-                    }
+        try (PreparedStatement statement = getConnection().prepareStatement(FIND_BY_BOOK)) {
+            statement.setInt(1, book.getId());
+            try (ResultSet resultSet = statement.executeQuery()) {
+                while (resultSet.next()) {
+                    genre = itemGenre(resultSet);
                 }
             }
         } catch (SQLException e) {

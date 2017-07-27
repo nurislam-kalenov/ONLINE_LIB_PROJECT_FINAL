@@ -33,14 +33,12 @@ public class MySqlCustomerDao extends BaseDao implements CustomerDao {
 
     @Override
     public Customer insert(Customer item) throws DaoException {
-        try {
-            try (PreparedStatement statement = getConnection().prepareStatement(INSERT, PreparedStatement.RETURN_GENERATED_KEYS)) {
-                statementCustomer(statement, item);
-                statement.executeUpdate();
-                try (ResultSet resultSet = statement.getGeneratedKeys()) {
-                    resultSet.next();
-                    item.setId(resultSet.getInt(1));
-                }
+        try (PreparedStatement statement = getConnection().prepareStatement(INSERT, PreparedStatement.RETURN_GENERATED_KEYS)) {
+            statementCustomer(statement, item);
+            statement.executeUpdate();
+            try (ResultSet resultSet = statement.getGeneratedKeys()) {
+                resultSet.next();
+                item.setId(resultSet.getInt(1));
             }
             log.debug("Create the customer entity where id = {} ", item.getId());
         } catch (SQLException e) {
@@ -53,15 +51,14 @@ public class MySqlCustomerDao extends BaseDao implements CustomerDao {
     @Override
     public Customer findById(int id) throws DaoException {
         Customer customer = null;
-        try {
-            try (PreparedStatement statement = getConnection().prepareStatement(FIND_BY_ID)) {
-                statement.setInt(1, id);
-                try (ResultSet resultSet = statement.executeQuery()) {
-                    while (resultSet.next()) {
-                        customer = itemCustomer(resultSet);
-                    }
+        try (PreparedStatement statement = getConnection().prepareStatement(FIND_BY_ID)) {
+            statement.setInt(1, id);
+            try (ResultSet resultSet = statement.executeQuery()) {
+                while (resultSet.next()) {
+                    customer = itemCustomer(resultSet);
                 }
             }
+
         } catch (SQLException e) {
             log.warn("Can't find the customer entity where id equals : {} ", id, e);
             throw new DaoException("can't find by id ", e);
@@ -137,16 +134,15 @@ public class MySqlCustomerDao extends BaseDao implements CustomerDao {
     @Override
     public Customer getCustomer(String login, String password) throws DaoException {
         Customer customer = null;
-        try {
-            try (PreparedStatement statement = getConnection().prepareStatement(FIND_BY_LOGIN_PASSWORD)) {
-                statement.setString(1, login);
-                statement.setString(2, password);
-                try (ResultSet resultSet = statement.executeQuery()) {
-                    while (resultSet.next()) {
-                        customer = itemCustomer(resultSet);
-                    }
+        try (PreparedStatement statement = getConnection().prepareStatement(FIND_BY_LOGIN_PASSWORD)) {
+            statement.setString(1, login);
+            statement.setString(2, password);
+            try (ResultSet resultSet = statement.executeQuery()) {
+                while (resultSet.next()) {
+                    customer = itemCustomer(resultSet);
                 }
             }
+
         } catch (SQLException e) {
             log.warn("Can't find the customer entity by login{} and password **** ", login, e);
             throw new DaoException("can't get by login and password ", e);
@@ -157,14 +153,12 @@ public class MySqlCustomerDao extends BaseDao implements CustomerDao {
     @Override
     public Customer findByManagement(Management management) throws DaoException {
         Customer customer = new Customer();
-        try {
-            try (PreparedStatement statement = getConnection().prepareStatement(FIND_BY_MANAGEMENT)) {
-                statement.setInt(1, management.getId());
-                try (ResultSet resultSet = statement.executeQuery()) {
-                    while (resultSet.next()) {
-                        customer.setId(resultSet.getInt(1));
-                        customer.setEmail(resultSet.getString(2));
-                    }
+        try (PreparedStatement statement = getConnection().prepareStatement(FIND_BY_MANAGEMENT)) {
+            statement.setInt(1, management.getId());
+            try (ResultSet resultSet = statement.executeQuery()) {
+                while (resultSet.next()) {
+                    customer.setId(resultSet.getInt(1));
+                    customer.setEmail(resultSet.getString(2));
                 }
             }
         } catch (SQLException e) {
@@ -178,15 +172,13 @@ public class MySqlCustomerDao extends BaseDao implements CustomerDao {
     public List<Customer> getLimitCustomers(int start, int count) throws DaoException {
         List<Customer> list = new ArrayList<>();
         Customer customer = null;
-        try {
-            try (PreparedStatement statement = getConnection().prepareStatement(LIMIT_CUSTOMER)) {
-                statement.setInt(1, ((start - 1) * count));
-                statement.setInt(2, count);
-                try (ResultSet resultSet = statement.executeQuery()) {
-                    while (resultSet.next()) {
-                        customer = itemCustomer(resultSet);
-                        list.add(customer);
-                    }
+        try (PreparedStatement statement = getConnection().prepareStatement(LIMIT_CUSTOMER)) {
+            statement.setInt(1, ((start - 1) * count));
+            statement.setInt(2, count);
+            try (ResultSet resultSet = statement.executeQuery()) {
+                while (resultSet.next()) {
+                    customer = itemCustomer(resultSet);
+                    list.add(customer);
                 }
             }
         } catch (SQLException e) {

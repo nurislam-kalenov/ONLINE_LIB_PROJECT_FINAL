@@ -26,13 +26,11 @@ public class MySqlPersonDao extends BaseDao implements PersonDao {
 
     @Override
     public Person insert(Person item) throws DaoException {
-        try {
-            try (PreparedStatement statement = getConnection().prepareStatement(INSERT, PreparedStatement.RETURN_GENERATED_KEYS)) {
-                statementPerson(statement, item).executeUpdate();
-                try (ResultSet resultSet = statement.getGeneratedKeys()) {
-                    resultSet.next();
-                    item.setId(resultSet.getInt(1));
-                }
+        try (PreparedStatement statement = getConnection().prepareStatement(INSERT, PreparedStatement.RETURN_GENERATED_KEYS)) {
+            statementPerson(statement, item).executeUpdate();
+            try (ResultSet resultSet = statement.getGeneratedKeys()) {
+                resultSet.next();
+                item.setId(resultSet.getInt(1));
             }
             log.debug("Create the person entity where id = {}", item.getId());
         } catch (SQLException e) {
@@ -45,15 +43,13 @@ public class MySqlPersonDao extends BaseDao implements PersonDao {
     @Override
     public Person findById(int id) throws DaoException {
         Person person = null;
-        try {
-            try (PreparedStatement statement = getConnection().prepareStatement(FIND_BY_ID)) {
+        try (PreparedStatement statement = getConnection().prepareStatement(FIND_BY_ID)) {
                 statement.setInt(1, id);
                 try (ResultSet resultSet = statement.executeQuery()) {
                     while (resultSet.next()) {
                         person = itemPerson(resultSet);
                     }
                 }
-            }
         } catch (SQLException e) {
             log.warn("Can't find the person entity where id equals : {} ", id, e);
             throw new DaoException("can't find by id ", e);
@@ -93,8 +89,7 @@ public class MySqlPersonDao extends BaseDao implements PersonDao {
     @Override
     public Person findByCustomer(Customer customer) throws DaoException {
         Person person = null;
-        try {
-            try (PreparedStatement statement = getConnection().prepareStatement(FIND_BY_CUSTOMER)) {
+        try (PreparedStatement statement = getConnection().prepareStatement(FIND_BY_CUSTOMER)) {
                 statement.setInt(1, customer.getId());
                 try (ResultSet resultSet = statement.executeQuery()) {
                     while (resultSet.next()) {
@@ -102,7 +97,6 @@ public class MySqlPersonDao extends BaseDao implements PersonDao {
 
                     }
                 }
-            }
         } catch (SQLException e) {
             log.warn("Can't find person entity by customer where id equals : {} ", customer.getId(), e);
             throw new DaoException("can't find by customer ", e);

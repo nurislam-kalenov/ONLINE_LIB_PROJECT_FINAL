@@ -25,17 +25,15 @@ public class MySqlCustomerRoleDao extends BaseDao implements CustomerRoleDao {
     @Override
     public CustomerRole findByCustomer(Customer customer) throws DaoException {
         CustomerRole customerRole = null;
-        try {
-            try (PreparedStatement statement = getConnection().prepareStatement(FIND_BY_CUSTOMER)) {
-                statement.setInt(1, customer.getId());
-                try (ResultSet resultSet = statement.executeQuery()) {
-                    while (resultSet.next()) {
-                        customerRole = itemRole(resultSet);
-                    }
+        try (PreparedStatement statement = getConnection().prepareStatement(FIND_BY_CUSTOMER)) {
+            statement.setInt(1, customer.getId());
+            try (ResultSet resultSet = statement.executeQuery()) {
+                while (resultSet.next()) {
+                    customerRole = itemRole(resultSet);
                 }
             }
         } catch (SQLException e) {
-            log.warn("Can't find customerRole entity by customer where customer id equals : {}", customer.getId() ,e);
+            log.warn("Can't find customerRole entity by customer where customer id equals : {}", customer.getId(), e);
             throw new DaoException("can't find by customer ", e);
         }
         return customerRole;
@@ -44,17 +42,15 @@ public class MySqlCustomerRoleDao extends BaseDao implements CustomerRoleDao {
     @Override
     public CustomerRole findRoleByName(String nameRole) throws DaoException {
         CustomerRole customerRole = null;
-        try {
-            try (PreparedStatement statement = getConnection().prepareStatement(FIND_BY_NAME_ROLE)) {
-                statement.setString(1, nameRole);
-                try (ResultSet resultSet = statement.executeQuery()) {
-                    while (resultSet.next()) {
-                        customerRole = itemRole(resultSet);
-                    }
+        try (PreparedStatement statement = getConnection().prepareStatement(FIND_BY_NAME_ROLE)) {
+            statement.setString(1, nameRole);
+            try (ResultSet resultSet = statement.executeQuery()) {
+                while (resultSet.next()) {
+                    customerRole = itemRole(resultSet);
                 }
             }
         } catch (SQLException e) {
-            log.warn("Can't find customerRole entity by name where name equals : {} ", nameRole ,e);
+            log.warn("Can't find customerRole entity by name where name equals : {} ", nameRole, e);
             throw new DaoException("can't find by role ", e);
         }
         return customerRole;

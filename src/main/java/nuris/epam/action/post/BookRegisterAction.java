@@ -28,7 +28,6 @@ import static nuris.epam.action.constants.Constants.*;
  */
 public class BookRegisterAction implements Action {
     private static final Logger log = LoggerFactory.getLogger(BookRegisterAction.class);
-
     private String firstName;
     private String lastName;
     private String middleName;
@@ -44,7 +43,6 @@ public class BookRegisterAction implements Action {
 
     @Override
     public ActionResult execute(HttpServletRequest req, HttpServletResponse resp) {
-
         BookService bookService = new BookService();
         Properties properties = new Properties();
 
@@ -118,10 +116,8 @@ public class BookRegisterAction implements Action {
         return new ActionResult(BOOKS, true);
     }
 
-    private void initValues(HttpServletRequest req){
-        firstName = req.getParameter(FIRST_NAME);
-        lastName = req.getParameter(LAST_NAME);
-        middleName = req.getParameter(MIDDLE_NAME);
+    private void initValues(HttpServletRequest req) {
+        initAuthorValue(req);
         isbn = req.getParameter(ISBN);
         description = req.getParameter(DESCRIPTION);
         name = req.getParameter(BOOK_NAME);
@@ -130,6 +126,13 @@ public class BookRegisterAction implements Action {
         amount = req.getParameter(BOOK_AMOUNT);
         price = req.getParameter(BOOK_PRICE);
     }
+
+    private void initAuthorValue(HttpServletRequest req) {
+        firstName = req.getParameter(FIRST_NAME);
+        lastName = req.getParameter(LAST_NAME);
+        middleName = req.getParameter(MIDDLE_NAME);
+    }
+
 
     private void checkParamValid(String paramName, String paramValue, String validator, HttpServletRequest request) {
         Pattern pattern = Pattern.compile(validator);

@@ -47,13 +47,11 @@ public class MySqlCityDao extends BaseDao implements CityDao {
     public List<City> getAllCity() throws DaoException {
         List<City> list = new ArrayList<>();
         City city = null;
-        try {
-            try (PreparedStatement statement = getConnection().prepareStatement(SELECT_ALL)) {
-                try (ResultSet resultSet = statement.executeQuery()) {
-                    while (resultSet.next()) {
-                        city = itemCity(resultSet);
-                        list.add(city);
-                    }
+        try (PreparedStatement statement = getConnection().prepareStatement(SELECT_ALL)) {
+            try (ResultSet resultSet = statement.executeQuery()) {
+                while (resultSet.next()) {
+                    city = itemCity(resultSet);
+                    list.add(city);
                 }
             }
         } catch (SQLException e) {

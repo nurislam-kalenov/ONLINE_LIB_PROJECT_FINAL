@@ -26,13 +26,11 @@ public class MySqlAuthorDao extends BaseDao implements AuthorDao {
 
     @Override
     public Author insert(Author item) throws DaoException {
-        try {
-            try (PreparedStatement statement = getConnection().prepareStatement(INSERT, PreparedStatement.RETURN_GENERATED_KEYS)) {
-                statement(statement, item).executeUpdate();
-                try (ResultSet resultSet = statement.getGeneratedKeys()) {
-                    resultSet.next();
-                    item.setId(resultSet.getInt(1));
-                }
+        try (PreparedStatement statement = getConnection().prepareStatement(INSERT, PreparedStatement.RETURN_GENERATED_KEYS)) {
+            statement(statement, item).executeUpdate();
+            try (ResultSet resultSet = statement.getGeneratedKeys()) {
+                resultSet.next();
+                item.setId(resultSet.getInt(1));
             }
             log.debug("Create the author entity where id = {}", item.getId());
         } catch (SQLException e) {
@@ -45,13 +43,11 @@ public class MySqlAuthorDao extends BaseDao implements AuthorDao {
     @Override
     public Author findById(int id) throws DaoException {
         Author author = null;
-        try {
-            try (PreparedStatement statement = getConnection().prepareStatement(FIND_BY_ID)) {
-                statement.setInt(1, id);
-                try (ResultSet resultSet = statement.executeQuery()) {
-                    while (resultSet.next()) {
-                        author = itemAuthor(resultSet);
-                    }
+        try (PreparedStatement statement = getConnection().prepareStatement(FIND_BY_ID)) {
+            statement.setInt(1, id);
+            try (ResultSet resultSet = statement.executeQuery()) {
+                while (resultSet.next()) {
+                    author = itemAuthor(resultSet);
                 }
             }
         } catch (SQLException e) {
@@ -93,13 +89,11 @@ public class MySqlAuthorDao extends BaseDao implements AuthorDao {
     @Override
     public Author findByBook(Book book) throws DaoException {
         Author author = null;
-        try {
-            try (PreparedStatement statement = getConnection().prepareStatement(FIND_BY_BOOK)) {
-                statement.setInt(1, book.getId());
-                try (ResultSet resultSet = statement.executeQuery()) {
-                    while (resultSet.next()) {
-                        author = itemAuthor(resultSet);
-                    }
+        try (PreparedStatement statement = getConnection().prepareStatement(FIND_BY_BOOK)) {
+            statement.setInt(1, book.getId());
+            try (ResultSet resultSet = statement.executeQuery()) {
+                while (resultSet.next()) {
+                    author = itemAuthor(resultSet);
                 }
             }
         } catch (SQLException e) {

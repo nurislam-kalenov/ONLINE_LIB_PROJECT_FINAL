@@ -35,15 +35,13 @@ public class MySqlTransactionDao extends BaseDao implements TransactionDao {
 
     @Override
     public Transaction insert(Transaction item) throws DaoException {
-        try {
-            try (PreparedStatement statement = getConnection().prepareStatement(INSERT, PreparedStatement.RETURN_GENERATED_KEYS)) {
-                statement.setInt(1, item.getBookInfo().getId());
-                statement.setInt(2, item.getCustomer().getId());
-                statement.executeUpdate();
-                try (ResultSet resultSet = statement.getGeneratedKeys()) {
-                    resultSet.next();
-                    item.setId(resultSet.getInt(1));
-                }
+        try (PreparedStatement statement = getConnection().prepareStatement(INSERT, PreparedStatement.RETURN_GENERATED_KEYS)) {
+            statement.setInt(1, item.getBookInfo().getId());
+            statement.setInt(2, item.getCustomer().getId());
+            statement.executeUpdate();
+            try (ResultSet resultSet = statement.getGeneratedKeys()) {
+                resultSet.next();
+                item.setId(resultSet.getInt(1));
             }
             log.debug("Create the transaction entity where id = {}", item.getId());
         } catch (SQLException e) {
@@ -56,16 +54,13 @@ public class MySqlTransactionDao extends BaseDao implements TransactionDao {
     @Override
     public Transaction findById(int id) throws DaoException {
         Transaction transaction = null;
-        try {
-            try (PreparedStatement statement = getConnection().prepareStatement(FIND_BY_ID)) {
-                statement.setInt(1, id);
-                try (ResultSet resultSet = statement.executeQuery()) {
-                    while (resultSet.next()) {
-                        transaction = itemTransaction(resultSet);
-                    }
+        try (PreparedStatement statement = getConnection().prepareStatement(FIND_BY_ID)) {
+            statement.setInt(1, id);
+            try (ResultSet resultSet = statement.executeQuery()) {
+                while (resultSet.next()) {
+                    transaction = itemTransaction(resultSet);
                 }
             }
-
         } catch (SQLException e) {
             log.warn("Can't find the transaction entity where id equals : {} ", id, e);
             throw new DaoException("can't find by id ", e);
@@ -105,14 +100,12 @@ public class MySqlTransactionDao extends BaseDao implements TransactionDao {
     @Override
     public List<Transaction> findByCustomer(Transaction transaction) throws DaoException {
         List<Transaction> list = new ArrayList<>();
-        try {
-            try (PreparedStatement statement = getConnection().prepareStatement(FIND_BY_CUSTOMER)) {
-                statement.setInt(1, transaction.getCustomer().getId());
-                try (ResultSet resultSet = statement.executeQuery()) {
-                    while (resultSet.next()) {
-                        transaction = itemTransaction(resultSet);
-                        list.add(transaction);
-                    }
+        try (PreparedStatement statement = getConnection().prepareStatement(FIND_BY_CUSTOMER)) {
+            statement.setInt(1, transaction.getCustomer().getId());
+            try (ResultSet resultSet = statement.executeQuery()) {
+                while (resultSet.next()) {
+                    transaction = itemTransaction(resultSet);
+                    list.add(transaction);
                 }
             }
         } catch (SQLException e) {
@@ -125,19 +118,20 @@ public class MySqlTransactionDao extends BaseDao implements TransactionDao {
     @Override
     public List<Transaction> getListTransactionByCustomer(Transaction transaction, int start, int count, boolean isActive) throws DaoException {
         List<Transaction> list = new ArrayList<>();
-        try {
-            try (PreparedStatement statement = getConnection().prepareStatement(isActive ? ACTIVE_CUSTOMER : INACTIVE_CUSTOMER)) {
-                statement.setInt(1, transaction.getCustomer().getId());
-                statement.setInt(2, ((start - 1) * count));
-                statement.setInt(3, count);
-                try (ResultSet resultSet = statement.executeQuery()) {
-                    while (resultSet.next()) {
-                        transaction = itemTransaction(resultSet);
-                        list.add(transaction);
-                    }
+        try (PreparedStatement statement = getConnection().prepareStatement(isActive ? ACTIVE_CUSTOMER : INACTIVE_CUSTOMER)) {
+            statement.setInt(1, transaction.getCustomer().getId());
+            statement.setInt(2, ((start - 1) * count));
+            statement.setInt(3, count);
+            try (ResultSet resultSet = statement.executeQuery()) {
+                while (resultSet.next()) {
+                    transaction = itemTransaction(resultSet);
+                    list.add(transaction);
                 }
             }
-        } catch (SQLException e) {
+        } catch (
+                SQLException e)
+
+        {
             log.warn("Can't get transaction list by range {} to {} where book transaction id equals : {} ", start, count, transaction.getId(), e);
             throw new DaoException("can't get list of transaction by customer ", e);
         }
@@ -147,13 +141,11 @@ public class MySqlTransactionDao extends BaseDao implements TransactionDao {
     @Override
     public Transaction findByManagement(Management management) throws DaoException {
         Transaction transaction = null;
-        try {
-            try (PreparedStatement statement = getConnection().prepareStatement(FIND_BY_MANAGEMENT)) {
-                statement.setInt(1, management.getId());
-                try (ResultSet resultSet = statement.executeQuery()) {
-                    while (resultSet.next()) {
-                        transaction = itemTransaction(resultSet);
-                    }
+        try (PreparedStatement statement = getConnection().prepareStatement(FIND_BY_MANAGEMENT)) {
+            statement.setInt(1, management.getId());
+            try (ResultSet resultSet = statement.executeQuery()) {
+                while (resultSet.next()) {
+                    transaction = itemTransaction(resultSet);
                 }
             }
         } catch (SQLException e) {
@@ -166,13 +158,11 @@ public class MySqlTransactionDao extends BaseDao implements TransactionDao {
     @Override
     public int getTransactionCountByCustomer(Transaction transaction, boolean isActive) throws DaoException {
         int count = 0;
-        try {
-            try (PreparedStatement statement = getConnection().prepareStatement(isActive ? TRANSACTION_ACTIVE_COUNT : TRANSACTION_INACTIVE_COUNT)) {
-                statement.setInt(1, transaction.getCustomer().getId());
-                try (ResultSet resultSet = statement.executeQuery()) {
-                    while (resultSet.next()) {
-                        count = resultSet.getInt(1);
-                    }
+        try (PreparedStatement statement = getConnection().prepareStatement(isActive ? TRANSACTION_ACTIVE_COUNT : TRANSACTION_INACTIVE_COUNT)) {
+            statement.setInt(1, transaction.getCustomer().getId());
+            try (ResultSet resultSet = statement.executeQuery()) {
+                while (resultSet.next()) {
+                    count = resultSet.getInt(1);
                 }
             }
         } catch (SQLException e) {

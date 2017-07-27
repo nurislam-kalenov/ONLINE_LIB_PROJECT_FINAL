@@ -114,16 +114,20 @@ public class RegisterAction implements Action {
     }
 
     private void initValues(HttpServletRequest req) {
+        initPersonValue(req);
         email = req.getParameter(EMAIL);
         password = req.getParameter(PASSWORD);
         passwordConfirm = req.getParameter(PASSWORD_CONFIRM);
-        firstName = req.getParameter(FIRST_NAME);
-        lastName = req.getParameter(LAST_NAME);
-        middleName = req.getParameter(MIDDLE_NAME);
         phone = req.getParameter(PHONE);
         birthday = req.getParameter(BIRTHDAY);
         address = req.getParameter(ADDRESS);
         cityName = req.getParameter(CITY);
+    }
+
+    private void initPersonValue(HttpServletRequest req){
+        firstName = req.getParameter(FIRST_NAME);
+        lastName = req.getParameter(LAST_NAME);
+        middleName = req.getParameter(MIDDLE_NAME);
     }
 
     private void checkParamValid(String paramName, String paramValue, String validator, HttpServletRequest request) {

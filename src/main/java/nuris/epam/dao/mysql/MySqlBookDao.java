@@ -33,14 +33,12 @@ public class MySqlBookDao extends BaseDao implements BookDao {
 
     @Override
     public Book insert(Book item) throws DaoException {
-        try {
-            try (PreparedStatement statement = getConnection().prepareStatement(INSERT, PreparedStatement.RETURN_GENERATED_KEYS)) {
-                statementBook(statement, item);
-                statement.executeUpdate();
-                try (ResultSet resultSet = statement.getGeneratedKeys()) {
-                    resultSet.next();
-                    item.setId(resultSet.getInt(1));
-                }
+        try (PreparedStatement statement = getConnection().prepareStatement(INSERT, PreparedStatement.RETURN_GENERATED_KEYS)) {
+            statementBook(statement, item);
+            statement.executeUpdate();
+            try (ResultSet resultSet = statement.getGeneratedKeys()) {
+                resultSet.next();
+                item.setId(resultSet.getInt(1));
             }
             log.debug("Create the book entity where id = {}", item.getId());
         } catch (SQLException e) {
@@ -53,13 +51,11 @@ public class MySqlBookDao extends BaseDao implements BookDao {
     @Override
     public Book findById(int id) throws DaoException {
         Book book = null;
-        try {
-            try (PreparedStatement statement = getConnection().prepareStatement(FIND_BY_ID)) {
-                statement.setInt(1, id);
-                try (ResultSet resultSet = statement.executeQuery()) {
-                    while (resultSet.next()) {
-                        book = itemBook(resultSet);
-                    }
+        try (PreparedStatement statement = getConnection().prepareStatement(FIND_BY_ID)) {
+            statement.setInt(1, id);
+            try (ResultSet resultSet = statement.executeQuery()) {
+                while (resultSet.next()) {
+                    book = itemBook(resultSet);
                 }
             }
         } catch (SQLException e) {
@@ -101,15 +97,14 @@ public class MySqlBookDao extends BaseDao implements BookDao {
     @Override
     public int getBookCountByGenre(Genre genre) throws DaoException {
         int count = 0;
-        try {
-            try (PreparedStatement statement = getConnection().prepareStatement(COUNT_BOOK_BY_GENRE)) {
-                statement.setInt(1, genre.getId());
-                try (ResultSet resultSet = statement.executeQuery()) {
-                    while (resultSet.next()) {
-                        count = resultSet.getInt(1);
-                    }
+        try (PreparedStatement statement = getConnection().prepareStatement(COUNT_BOOK_BY_GENRE)) {
+            statement.setInt(1, genre.getId());
+            try (ResultSet resultSet = statement.executeQuery()) {
+                while (resultSet.next()) {
+                    count = resultSet.getInt(1);
                 }
             }
+
         } catch (SQLException e) {
             log.warn("Can't get book count by genre where genre id equals : {} ", genre.getId(), e);
             throw new DaoException("can't count by genre ", e);
@@ -144,14 +139,12 @@ public class MySqlBookDao extends BaseDao implements BookDao {
     public List<Book> findByName(String name) throws DaoException {
         List<Book> list = new ArrayList<>();
         Book book = null;
-        try {
-            try (PreparedStatement statement = getConnection().prepareStatement(FIND_BY_NAME)) {
-                statement.setString(1, name);
-                try (ResultSet resultSet = statement.executeQuery()) {
-                    while (resultSet.next()) {
-                        book = itemBook(resultSet);
-                        list.add(book);
-                    }
+        try (PreparedStatement statement = getConnection().prepareStatement(FIND_BY_NAME)) {
+            statement.setString(1, name);
+            try (ResultSet resultSet = statement.executeQuery()) {
+                while (resultSet.next()) {
+                    book = itemBook(resultSet);
+                    list.add(book);
                 }
             }
         } catch (SQLException e) {
@@ -164,13 +157,11 @@ public class MySqlBookDao extends BaseDao implements BookDao {
     @Override
     public Book findByBookInfo(BookInfo bookInfo) throws DaoException {
         Book book = null;
-        try {
-            try (PreparedStatement statement = getConnection().prepareStatement(FIND_BY_BOOK)) {
-                statement.setInt(1, bookInfo.getId());
-                try (ResultSet resultSet = statement.executeQuery()) {
-                    while (resultSet.next()) {
-                        book = itemBook(resultSet);
-                    }
+        try (PreparedStatement statement = getConnection().prepareStatement(FIND_BY_BOOK)) {
+            statement.setInt(1, bookInfo.getId());
+            try (ResultSet resultSet = statement.executeQuery()) {
+                while (resultSet.next()) {
+                    book = itemBook(resultSet);
                 }
             }
         } catch (SQLException e) {
@@ -183,13 +174,11 @@ public class MySqlBookDao extends BaseDao implements BookDao {
     @Override
     public Book findByIsbn(String isbn) throws DaoException {
         Book book = null;
-        try {
-            try (PreparedStatement statement = getConnection().prepareStatement(FIND_BY_ISBN)) {
-                statement.setString(1, isbn);
-                try (ResultSet resultSet = statement.executeQuery()) {
-                    while (resultSet.next()) {
-                        book = itemBook(resultSet);
-                    }
+        try (PreparedStatement statement = getConnection().prepareStatement(FIND_BY_ISBN)) {
+            statement.setString(1, isbn);
+            try (ResultSet resultSet = statement.executeQuery()) {
+                while (resultSet.next()) {
+                    book = itemBook(resultSet);
                 }
             }
         } catch (SQLException e) {

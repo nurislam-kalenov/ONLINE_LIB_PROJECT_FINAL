@@ -24,20 +24,18 @@ public class MySqlManagementDao extends BaseDao implements ManagementDao {
     private static final String INSERT = "INSERT INTO management VALUES (id_management,?,?)";
     private static final String UPDATE = "UPDATE management SET return_date = ?,id_transaction = ? WHERE id_management = ?";
     private static final String ACTIVE_MANAGEMENT = "SELECT * FROM management WHERE return_date IS NULL limit ?,?";
-    private static final String INACTIVE_MANAGEMENT ="SELECT * FROM management WHERE return_date IS NOT NULL limit ?,?";
+    private static final String INACTIVE_MANAGEMENT = "SELECT * FROM management WHERE return_date IS NOT NULL limit ?,?";
     private static final String MANAGEMENT_ACTIVE_COUNT = "SELECT COUNT(*) FROM management WHERE return_date IS NULL";
-    private static final String MANAGEMENT_INACTIVE_COUNT =  "SELECT COUNT(*) FROM management WHERE return_date IS NOT NULL";
+    private static final String MANAGEMENT_INACTIVE_COUNT = "SELECT COUNT(*) FROM management WHERE return_date IS NOT NULL";
 
     @Override
     public Management insert(Management item) throws DaoException {
-        try {
-            try (PreparedStatement statement = getConnection().prepareStatement(INSERT, PreparedStatement.RETURN_GENERATED_KEYS)) {
-                statementManagement(statement, item);
-                statement.executeUpdate();
-                try (ResultSet resultSet = statement.getGeneratedKeys()) {
-                    resultSet.next();
-                    item.setId(resultSet.getInt(1));
-                }
+        try (PreparedStatement statement = getConnection().prepareStatement(INSERT, PreparedStatement.RETURN_GENERATED_KEYS)) {
+            statementManagement(statement, item);
+            statement.executeUpdate();
+            try (ResultSet resultSet = statement.getGeneratedKeys()) {
+                resultSet.next();
+                item.setId(resultSet.getInt(1));
             }
             log.debug("Create the management entity where id = {}", item.getId());
         } catch (SQLException e) {
@@ -50,18 +48,16 @@ public class MySqlManagementDao extends BaseDao implements ManagementDao {
     @Override
     public Management findById(int id) throws DaoException {
         Management management = null;
-        try {
-            try (PreparedStatement statement = getConnection().prepareStatement(FIND_BY_ID)) {
-                statement.setInt(1, id);
-                try (ResultSet resultSet = statement.executeQuery()) {
-                    while (resultSet.next()) {
-                        management = itemManagement(resultSet);
-                    }
+        try (PreparedStatement statement = getConnection().prepareStatement(FIND_BY_ID)) {
+            statement.setInt(1, id);
+            try (ResultSet resultSet = statement.executeQuery()) {
+                while (resultSet.next()) {
+                    management = itemManagement(resultSet);
                 }
             }
         } catch (SQLException e) {
             log.warn("Can't find the management entity where id equals : {} ", id, e);
-            throw new DaoException("can find by id " , e);
+            throw new DaoException("can find by id ", e);
         }
         return management;
     }
@@ -89,15 +85,13 @@ public class MySqlManagementDao extends BaseDao implements ManagementDao {
     public List<Management> getListManagement(int start, int count, boolean isActive) throws DaoException {
         List<Management> list = new ArrayList<>();
         Management management = null;
-        try {
-            try (PreparedStatement statement = getConnection().prepareStatement(isActive ? INACTIVE_MANAGEMENT : ACTIVE_MANAGEMENT)) {
-                statement.setInt(1, ((start - 1) * count));
-                statement.setInt(2, count);
-                try (ResultSet resultSet = statement.executeQuery()) {
-                    while (resultSet.next()) {
-                        management = itemManagement(resultSet);
-                        list.add(management);
-                    }
+        try (PreparedStatement statement = getConnection().prepareStatement(isActive ? INACTIVE_MANAGEMENT : ACTIVE_MANAGEMENT)) {
+            statement.setInt(1, ((start - 1) * count));
+            statement.setInt(2, count);
+            try (ResultSet resultSet = statement.executeQuery()) {
+                while (resultSet.next()) {
+                    management = itemManagement(resultSet);
+                    list.add(management);
                 }
             }
         } catch (SQLException e) {
@@ -111,17 +105,16 @@ public class MySqlManagementDao extends BaseDao implements ManagementDao {
     @Override
     public int getManagementCount(boolean isActive) throws DaoException {
         int count = 0;
-        try {
-            try (PreparedStatement statement = getConnection().prepareStatement(isActive ? MANAGEMENT_INACTIVE_COUNT : MANAGEMENT_ACTIVE_COUNT)) {
-                try (ResultSet resultSet = statement.executeQuery()) {
-                    while (resultSet.next()) {
-                        count = resultSet.getInt(1);
-                    }
+
+        try (PreparedStatement statement = getConnection().prepareStatement(isActive ? MANAGEMENT_INACTIVE_COUNT : MANAGEMENT_ACTIVE_COUNT)) {
+            try (ResultSet resultSet = statement.executeQuery()) {
+                while (resultSet.next()) {
+                    count = resultSet.getInt(1);
                 }
             }
         } catch (SQLException e) {
             log.warn("Can't get management count", e);
-            throw new DaoException("Can't count by active/inactive " , e);
+            throw new DaoException("Can't count by active/inactive ", e);
         }
         return count;
     }
